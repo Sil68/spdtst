@@ -42,7 +42,7 @@ This _suite_ comprises of
 * _**spdtst.R**_, a simple [R][r] script for charting the collected data;
 * _**spdtst.Rproj**_, a corresponding [R][r] project file;
 * _**mhshlib.sh**_, a general purpose shell script library;  as well as
-* _**data/spdtst.log**_, a sample log file.
+* _**spdtst.log**_, a sample log file.
 
 ## spdtst.sh
 This script has been created with being executed as a _**cron job**_ in mind. In our case this script is running on a [Raspberry Pi][raspi], collecting data at a five minutes' interval, and transferring the data subsequently to a reporting host via _scp_.
