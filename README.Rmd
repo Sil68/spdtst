@@ -1,0 +1,80 @@
+---
+title: "README"
+author: "MMHein.at"
+date: '`r format(Sys.Date(), "%e %B %y")`'
+output:
+  html_document:
+    highlight: zenburn
+    number_sections: yes
+    theme: journal
+    toc: yes
+  pdf_document:
+    highlight: zenburn
+    number_sections: yes
+    toc: yes
+  word_document:
+    highlight: zenburn
+    number_sections: yes
+    toc: yes
+---
+<style type="text/css">
+    body {
+        font-size: 1.5em;
+    }
+    td {
+        font-size: 0.9em;
+    }
+    code.r {
+        font-size: 0.8em;
+    }
+    pre {
+        font-size: 0.8em;
+    }
+</style>
+# Overview
+This _suite_ has been created to measure or monitor the internet speed by means of facilitating  [speedtest-cli][spdtst].
+
+# Components
+This _suite_ comprises of
+
+* this _**README**_;
+* _**spdtst.sh**_, a shell script acting as a monitoring/data point collecting agent;
+* _**spdtst.R**_, a simple [R][r] script for charting the collected data;
+* _**spdtst.Rproj**_, a corresponding [R][r] project file;
+* _**mhshlib.sh**_, a general purpose shell script library;  as well as
+* _**data/spdtst.log**_, a sample log file.
+
+## spdtst.sh
+This script has been created with being executed as a _**cron job**_ in mind. In our case this script is running on a [Raspberry Pi][raspi], collecting data at a five minutes' interval, and transferring the data subsequently to a reporting host via _scp_.
+
+    0,5,10,15,20,25,30,35,40,45,50,55 * * * * SSH_AUTH_SOCK=$(lsof -a -p $(pgrep ssh-agent) -U -F n | sed -n 's/^n//p') /usr/local/bin/spdtst.sh -A -H 192.168.5.81 -U root -D "/volume1/MHData/Database/logfile/MH-Web-03" 
+
+By default the data collected is stored locally in _**/var/log/spdtst.log**_ (or whatever name the script has been renamed to).
+
+## spdtst.R
+This [R][r] script reads in the collected data, cleanses and prepares the data, and subsequently displays the data in a simple overview chart, outlining the timely development of the measured _**download speed**_, _**upload speed**_, as well as a _**latency indicator**_.
+
+## mhshlib.sh
+At our site all shell scripts are sourcing this library, within which all faciliated programmes, sub-routins etc. are defined, intending to improve portability.
+
+## spdtst.log
+Data collected by _**spdtst.sh**_ is saved as a _csv_ file.
+
+    Server ID;Sponsor;Server Name;Timestamp;Distance;Ping;Download;Upload
+    10408;WIOCC;United Kingdom;2017-01-21T17:00:31.428487;3.1976547875895194;27.816;26862789.294724606;4790234.328325111
+    10408;WIOCC;United Kingdom;2017-01-21T18:00:10.586704;3.1976547875895194;380.293;39595252.53710904;3832831.752241013
+    10408;WIOCC;United Kingdom;2017-01-21T19:00:08.426152;3.1976547875895194;18.827;43256696.70277532;4244791.753182958
+    10408;WIOCC;United Kingdom;2017-01-21T20:00:08.652402;3.1976547875895194;63.002;56223449.81265502;4959352.930601957
+    10408;WIOCC;United Kingdom;2017-01-21T20:50:08.450669;3.1976547875895194;19.615;26912485.362233683;5029496.99791014
+    ...
+
+# Installation
+1. place _**spdtst.sh**_ on whichever systen appears to be convenient;
+2. configure eg. a _**cron job**_ in order to enable _**spdtst.sh**_ collecting data;
+3. run _**spdtst.R**_ in [R][r] or [RStudio][rstudio] to chart the data.
+
+---
+[r]: <https://www.r-project.org>
+[rstudio]: <https://www.rstudio.com/products/RStudio/>
+[raspi]: <https://www.raspberrypi.org>
+[spdtst]: <https://www.howtoforge.com/tutorial/check-internet-speed-with-speedtest-cli-on-ubuntu/>
